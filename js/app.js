@@ -8,6 +8,16 @@ var MAX_ROW = 5;
 var TILE_WIDTH = 101;
 var TILE_HEIGHT = 83;
 var TILE_OFFSET_Y = 20;
+var SCREEN_WIDTH = 505;
+
+/**
+ * Generate a random integer between min and max
+ * @param {number} min 
+ * @param {number} max 
+ */
+function random(min, max) {
+    return Math.floor(Math.random() * max) + min  
+}
 
 /**
  * Enemy character
@@ -16,11 +26,14 @@ var TILE_OFFSET_Y = 20;
  * @param {number} speed - Enemy speed
  */
 var Enemy = function(row, speed) {
+    // Enemy is outside of the screen?
+    this.isOutOfScreen = false;
+
     // Enemy speed
     this.speed = speed;
 
     // Enemy x position on the canvas
-    this.x = 0;
+    this.x = -TILE_WIDTH;
     
     // Enemy y position on the canvas
     this.y = row * TILE_HEIGHT - TILE_OFFSET_Y;
@@ -37,13 +50,14 @@ var Enemy = function(row, speed) {
 Enemy.prototype.update = function(dt) {
     var delta = this.speed * dt;
     this.x += delta;
+    this.isOutOfScreen = this.x  > SCREEN_WIDTH;
 };
 
 /**
  * Draw the enemy on the screen, required method for game
  */
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    this.isOutOfScreen || ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
@@ -99,13 +113,6 @@ Player.prototype.handleInput = function(key) {
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-// Enemy instances
-var allEnemies = [
-    new Enemy(1, 200),
-    new Enemy(2, 300),
-    new Enemy(3, 400)
-];
 
 // Player instance
 var player = new Player();

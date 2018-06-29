@@ -22,7 +22,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        allEnemies = [];
 
     canvas.width = 505;
     canvas.height = 606;
@@ -79,6 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
+        refreshEnemies();
         // checkCollisions();
     }
 
@@ -94,6 +96,29 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+    }
+
+    /**
+     * Remove enemies outside of the screen and spawn new ones.
+     */
+    function refreshEnemies() {
+        // Remove enemies outside of the screen
+        allEnemies = allEnemies.filter(function(enemy) {
+            return !enemy.isOutOfScreen;
+        });
+
+        if (allEnemies.length < 3) {
+            allEnemies.push(spawnEnemy());
+        }
+    }
+
+    /**
+     * Create a new enemy with a rando position and speed
+     */
+    function spawnEnemy() {
+        var row = random(1, 3);
+        var speed = random(100, 500);
+        return new Enemy(row, speed);
     }
 
     /* This function initially draws the "game level", it will then call
