@@ -82,6 +82,7 @@ var Engine = (function(global) {
         updateEntities(dt);
         refreshEnemies();
         checkCollisions();
+        checkWin();
     }
 
     /* This is called by the update function and loops through all of the
@@ -123,6 +124,15 @@ var Engine = (function(global) {
             }
         })
     }
+    function checkWin() {
+        if (player.row === 0) {
+            doc.querySelector('.message').classList.remove("hide");
+            win.setTimeout(function () {
+                doc.querySelector('.message').classList.add("hide");
+                player.reset();
+            }, 1500);
+        }
+    };
 
     /**
      * Create a new enemy with a rando position and speed
