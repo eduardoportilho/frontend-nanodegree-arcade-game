@@ -81,7 +81,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         refreshEnemies();
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -110,6 +110,18 @@ var Engine = (function(global) {
         if (allEnemies.length < 3) {
             allEnemies.push(spawnEnemy());
         }
+    }
+
+    /**
+     * Check for collisions between the player and the enemies and reset the
+     * player position when a colision is detected.
+     */
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            if (player.isColliding(enemy)) {
+                player.reset();
+            }
+        })
     }
 
     /**
